@@ -12,6 +12,7 @@ import {
     MenubarMenu, MenubarTrigger,
 } from '@/components/ui/menubar';
 import { Tag, Receipt, Wallet, Plus } from 'lucide-react';
+import { Toaster } from './ui/sonner';
 
 const MOCK_CATEGORIES: Category[] = [
     { _id: '1', label: 'Groceries', budget: 500 },
@@ -176,6 +177,7 @@ export default function Layout() {
                             'menu'
                 }
             />
+            <Toaster position="top-right" richColors closeButton />
         </div>
     );
 }
