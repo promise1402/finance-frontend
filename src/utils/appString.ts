@@ -77,3 +77,40 @@ export const AppStrings = {
         summary: { description: 'A full overview of your financial activity.' },
     },
 } as const;
+
+export const categoryStrings = {
+    // Modal
+    createTitle: 'New Category',
+    editTitle: 'Edit Category',
+    nameField: 'Category Name',
+    namePlaceholder: 'e.g. Groceries, Rent, Transport',
+    nameRequired: 'Category name is required.',
+    nameMinLength: 'At least 2 characters.',
+    colorField: 'Color',
+    budgetField: 'Budget',
+    budgetHint: 'optional · can be set later',
+    budgetInvalid: 'Must be a valid positive number.',
+    createBtn: 'Create Category',
+    saveBtn: 'Save Changes',
+    savingBtn: 'Saving…',
+    cancelBtn: 'Cancel',
+    // Delete dialog
+    deleteTitle: 'Delete Category',
+    deleteDesc: 'This will permanently delete this category. Expenses linked to it will lose their category. This cannot be undone.',
+    deleteConfirm: 'Delete',
+    deleteCancel: 'Cancel',
+    // Page
+    pageDesc: 'Manage your expense categories.',
+    tableNameCol: 'Name',
+    tableBudgetCol: 'Budget',
+    tableCreatedCol: 'Created',
+    tableActionsCol: 'Actions',
+    addBtn: '+ Add Category',
+    emptyTitle: 'No categories yet',
+    emptyDesc: 'Create your first category to start organising expenses.',
+    // Errors
+    duplicateError: 'A category with this name already exists.',
+    fetchError: 'Failed to load categories.',
+    saveError: 'Failed to save category.',
+    deleteError: 'Failed to delete category.',
+} as const;
