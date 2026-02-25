@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { t } from '@/theme/theme';
-import { AddExpenseModal, ExpenseFormValues, Category } from '@/modals/addExpense';
-import { AddCategoryModal, CategoryFormValues } from '@/modals/addCategory';
+import { toast } from 'sonner';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch } from '@/store';
+
+import { addCategory, selectCategories } from '@/store/slices/categorySlice';
+import { categoryStrings as CS } from '@/utils/appString';
+import { AddExpenseModal, type ExpenseFormValues } from '@/modals/addExpense';
+import { AddCategoryModal, type CategoryFormValues } from '@/modals/addCategory';
 
 import Sidebar, { navItems } from '@/pages/sidebar';
 import { QuickActionFAB } from '@/components/quickActionFab';
@@ -14,15 +20,16 @@ import {
 import { Tag, Receipt, Wallet, Plus } from 'lucide-react';
 import { Toaster } from './ui/sonner';
 
-const MOCK_CATEGORIES: Category[] = [
-    { _id: '1', label: 'Groceries', budget: 500 },
-    { _id: '2', label: 'Transport', budget: 200 },
-    { _id: '3', label: 'Rent', budget: 1500 },
-    { _id: '4', label: 'Utilities' },
-];
-
 export default function Layout() {
     const location = useLocation();
+    const dispatch = useDispatch<AppDispatch>();
+
+    const categoriesFromStore = useSelector(selectCategories);
+    const categoriesForExpense = categoriesFromStore.map(c => ({
+        _id: c._id,
+        label: c.name,
+        budget: c.budget ?? undefined,
+    }));
 
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [expenseOpen, setExpenseOpen] = useState(false);
@@ -31,51 +38,60 @@ export default function Layout() {
 
     const activeLabel = navItems.find(n => n.path === location.pathname)?.label ?? 'Dashboard';
 
-    const isExpenses = location.pathname === '/expenses';
-    const isCategories = location.pathname === '/categories';
-    const showExpense = !isCategories;
-    const showCategory = !isExpenses;
-
-    const triggerLabel =
-        isExpenses ? 'Add Expense' :
-            isCategories ? 'Add Category' :
-                'Quick Actions';
-
-    const TriggerIcon =
-        isExpenses ? Receipt :
-            isCategories ? Tag :
-                Plus;
-
+    // Expense
     const handleExpenseSubmit = async (data: ExpenseFormValues) => {
         setLoading(true);
         try {
-            // TODO: dispatch(createExpense({ ...data, amount: Number(data.amount), date: new Date(data.date) }))
+            // TODO: await dispatch(addExpense({ ... })).unwrap();
             console.log('Create expense:', data);
             setExpenseOpen(false);
-        } finally { setLoading(false); }
+        } finally {
+            setLoading(false);
+        }
     };
 
+    // Category
     const handleCategorySubmit = async (data: CategoryFormValues) => {
         setLoading(true);
+        const name = data.name.trim();
         try {
-            // TODO: dispatch(createCategory({ label: data.label, budget: data.budget ? Number(data.budget) : undefined }))
-            console.log('Create category:', data);
+            await dispatch(addCategory({
+                name,
+                color: data.color,
+                ...(data.budget ? { budget: Number(data.budget) } : {}),
+            })).unwrap();
+
+            toast.success(`"${name}" category created.`, {
+                description: 'You can now assign it to expenses.',
+            });
             setCategoryOpen(false);
-        } finally { setLoading(false); }
+        } catch (err: any) {
+            const errStr = (err?.payload ?? err?.message ?? String(err ?? '')).toLowerCase();
+            const isDuplicate = errStr.includes('exists') || errStr.includes('already') || errStr.includes('duplicate');
+            toast.error(
+                isDuplicate ? `"${name}" already exists.` : CS.saveError,
+                {
+                    id: 'category-save-error',
+                    description: isDuplicate ? 'Try a different name.' : 'Please try again.',
+                }
+            );
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className={`flex flex-col h-screen ${t.pageBg} overflow-hidden`}>
 
-            {/* ══ ROW 1 — TOPBAR (h-[61px], perfectly aligned with sidebar logo strip) */}
+            {/* ══ ROW 1 — TOPBAR */}
             <div className="hidden md:flex w-full h-15.25 shrink-0">
 
-                {/* Desktop logo strip — same width as sidebar */}
+                {/* Desktop logo strip */}
                 <div className={`
-          hidden md:flex items-center gap-2.5
-          w-64 shrink-0 px-5
-          ${t.sidebarBg} border-r border-b ${t.border}
-        `}>
+                    hidden md:flex items-center gap-2.5
+                    w-64 shrink-0 px-5
+                    ${t.sidebarBg} border-r border-b ${t.border}
+                `}>
                     <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${t.logoIconBg}`}>
                         <Wallet className={`w-4 h-4 ${t.logoIconText}`} />
                     </div>
@@ -84,11 +100,11 @@ export default function Layout() {
                     </span>
                 </div>
 
-                {/* Desktop header — page title + context-aware Quick Actions */}
+                {/* Desktop header */}
                 <header className={`
-          flex-1 hidden md:flex items-center justify-between px-5
-          ${t.headerBg} border-b ${t.border}
-        `}>
+                    flex-1 hidden md:flex items-center justify-between px-5
+                    ${t.headerBg} border-b ${t.border}
+                `}>
                     <div>
                         <h1 className={`text-sm font-semibold ${t.textPrimary}`}>{activeLabel}</h1>
                         <p className={`text-xs mt-0.5 ${t.textSubtle}`}>
@@ -98,67 +114,49 @@ export default function Layout() {
                         </p>
                     </div>
 
-                    {/* Context-aware Quick Actions */}
+                    {/* Quick Actions — always a dropdown on all pages */}
                     <div className="flex items-center gap-2 ml-auto">
                         <Menubar className={`bg-transparent border ${t.menubarBorder} h-8`}>
                             <MenubarMenu>
-                                {(isExpenses || isCategories) ? (
-                                    // Single action — no dropdown, direct modal open
-                                    <MenubarTrigger
-                                        className={`flex items-center gap-1.5 text-xs px-3 h-7 ${t.menubarTrigger}`}
-                                        onClick={() => isExpenses ? setExpenseOpen(true) : setCategoryOpen(true)}
+                                <MenubarTrigger className={`flex items-center gap-1.5 text-xs px-3 h-7 ${t.menubarTrigger}`}>
+                                    <Plus className="w-3.5 h-3.5" />
+                                    Quick Actions
+                                </MenubarTrigger>
+                                <MenubarContent className={t.menubarContent}>
+                                    <MenubarItem
+                                        className={`text-xs ${t.menubarItem}`}
+                                        onClick={() => setCategoryOpen(true)}
                                     >
-                                        <TriggerIcon className="w-3.5 h-3.5" />
-                                        {triggerLabel}
-                                    </MenubarTrigger>
-                                ) : (
-                                    // Multi-action dropdown
-                                    <>
-                                        <MenubarTrigger className={`flex items-center gap-1.5 text-xs px-3 h-7 ${t.menubarTrigger}`}>
-                                            <TriggerIcon className="w-3.5 h-3.5" />
-                                            {triggerLabel}
-                                        </MenubarTrigger>
-                                        <MenubarContent className={t.menubarContent}>
-                                            {showExpense && (
-                                                <MenubarItem className={`text-xs ${t.menubarItem}`} onClick={() => setExpenseOpen(true)}>
-                                                    <Receipt className="w-3.5 h-3.5 mr-2" /> Add Expense
-                                                </MenubarItem>
-                                            )}
-                                            {showCategory && (
-                                                <MenubarItem className={`text-xs ${t.menubarItem}`} onClick={() => setCategoryOpen(true)}>
-                                                    <Tag className="w-3.5 h-3.5 mr-2" /> Add Category
-                                                </MenubarItem>
-                                            )}
-                                        </MenubarContent>
-                                    </>
-                                )}
+                                        <Tag className="w-3.5 h-3.5 mr-2" /> Add Category
+                                    </MenubarItem>
+                                    <MenubarItem
+                                        className={`text-xs ${t.menubarItem}`}
+                                        onClick={() => setExpenseOpen(true)}
+                                    >
+                                        <Receipt className="w-3.5 h-3.5 mr-2" /> Add Expense
+                                    </MenubarItem>
+                                </MenubarContent>
                             </MenubarMenu>
                         </Menubar>
                     </div>
                 </header>
-
-                {/* Mobile topbar is rendered inside Sidebar */}
             </div>
 
             <div className="flex flex-1 min-h-0">
-
-                {/* Sidebar — handles mobile overlay + drawer internally */}
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onOpen={() => setSidebarOpen(true)}
                     onClose={() => setSidebarOpen(false)}
                 />
 
-                <main className={` flex-1 overflow-y-auto p-5 pt-20.25 md:pt-5 pb-24 md:pb-5
-          ${t.pageBg}
-        `}>
+                <main className={`flex-1 overflow-y-auto p-5 pt-20.25 md:pt-5 pb-24 md:pb-5 ${t.pageBg}`}>
                     <Outlet />
                 </main>
             </div>
 
             <AddExpenseModal
                 open={expenseOpen}
-                categories={MOCK_CATEGORIES}
+                categories={categoriesForExpense}
                 onClose={() => setExpenseOpen(false)}
                 onSubmit={handleExpenseSubmit}
                 loading={loading}
@@ -172,8 +170,8 @@ export default function Layout() {
 
             <QuickActionFAB
                 mode={
-                    isExpenses ? 'expense' :
-                        isCategories ? 'category' :
+                    location.pathname === '/expenses' ? 'expense' :
+                        location.pathname === '/categories' ? 'category' :
                             'menu'
                 }
             />
