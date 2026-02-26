@@ -4,8 +4,9 @@ import { toast } from 'sonner';
 import type { AppDispatch } from '@/store';
 
 import { addCategory, selectCategories } from '@/store/slices/categorySlice';
+import { addExpense, fetchExpenses } from '@/store/slices/expenseSlice';
 import { t } from '@/theme/theme';
-import { AppStrings, categoryStrings as CS } from '@/utils/appString';
+import { AppStrings, categoryStrings as CS, expenseStrings as ES } from '@/utils/appString';
 import { AddCategoryModal, type CategoryFormValues } from '@/modals/addCategory';
 import { AddExpenseModal, type ExpenseFormValues } from '@/modals/addExpense';
 import { Plus, Receipt, Tag } from 'lucide-react';
@@ -42,11 +43,25 @@ export function QuickActionFAB({ mode }: QuickActionFABProps) {
     // Expense
     const handleExpenseSubmit = async (data: ExpenseFormValues) => {
         setLoading(true);
+        const note = data.note.trim();
         try {
-            // TODO: await dispatch(addExpense({ ... })).unwrap();
-            console.log('Create expense:', data);
+            await dispatch(addExpense({
+                amount: Number(data.amount),
+                note,
+                date: data.date,
+                category: data.category,
+            })).unwrap();
+            dispatch(fetchExpenses()); // sync list in case ExpensesPage is mounted
+            toast.success(`"${note}" expense added.`, {
+                description: 'You can now view it in your expenses.',
+            });
             setExpenseOpen(false);
             setMenuOpen(false);
+        } catch (err: any) {
+            toast.error(ES.saveError, {
+                id: 'expense-save-error',
+                description: 'Please try again.',
+            });
         } finally {
             setLoading(false);
         }
