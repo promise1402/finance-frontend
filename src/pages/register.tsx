@@ -1,42 +1,41 @@
-import api from '../services/api';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
+
+import { registerUser, selectAuthLoading } from '../store/slices/authSlice';
 import { registerStrings, validationStrings } from '../utils/appString';
+import type { AppDispatch } from '../store';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function Register() {
     const navigate = useNavigate();
-    const [apiError, setApiError] = useState<string | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
+    const loading = useSelector(selectAuthLoading);
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm({
-        mode: "onChange",
-    });
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({ mode: 'onChange' });
 
-    const password = watch("password");
+    const password = watch('password');
 
     const onSubmit = async (data: any) => {
-        setApiError(null);
-        const { confirmPassword, ...dataToSend } = data;
-
+        const { confirmPassword, ...payload } = data;
         try {
-            await api.post('/auth/register', dataToSend);
+            await dispatch(registerUser(payload)).unwrap();
+            toast.success(registerStrings.successTitle, { description: registerStrings.successDesc });
             navigate('/login');
-        } catch (error: any) {
-            const message = error.response?.data?.message ||
-                error.response?.data?.errors?.[0]?.msg ||
-                registerStrings.apiFallbackError;
-            setApiError(message);
+        } catch (err: any) {
+            // RTK unwrap throws the rejectWithValue payload directly
+            const msg = typeof err === 'string'
+                ? err
+                : err?.payload ?? err?.message ?? registerStrings.apiFallbackError;
+            toast.error(msg);
         }
     };
 
-    // Reusable Icons
     const EyeIcon = () => (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
@@ -60,16 +59,6 @@ export default function Register() {
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-
-                    {/* FIXED HEIGHT API ERROR CONTAINER */}
-                    <div className="h-12 flex items-center justify-center">
-                        {apiError && (
-                            <div className="w-full p-2 bg-red-100 border border-red-400 text-red-700 rounded text-center text-xs animate-pulse">
-                                {apiError}
-                            </div>
-                        )}
-                    </div>
-
                     <form className="space-y-7" onSubmit={handleSubmit(onSubmit)}>
                         {/* EMAIL FIELD */}
                         <div className="relative">
@@ -120,7 +109,7 @@ export default function Register() {
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() => setShowPassword(p => !p)}
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400"
                                 >
                                     {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
@@ -141,13 +130,13 @@ export default function Register() {
                                     type={showConfirmPassword ? "text" : "password"}
                                     {...register("confirmPassword", {
                                         required: validationStrings.confirmPasswordRequired,
-                                        validate: (value) => value === password || validationStrings.passwordsDoNotMatch,
+                                        validate: v => v === password || validationStrings.passwordsDoNotMatch,
                                     })}
                                     className={`block w-full px-3 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm pr-10`}
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    onClick={() => setShowConfirmPassword(p => !p)}
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400"
                                 >
                                     {showConfirmPassword ? <EyeSlashIcon /> : <EyeIcon />}
@@ -159,11 +148,12 @@ export default function Register() {
                         </div>
 
                         <div className="pt-2">
-                            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-all">
-                                {registerStrings.buttonText}
+                            <button type="submit" disabled={loading}
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-60 transition-all">
+                                {loading ? registerStrings.loadingText : registerStrings.buttonText}
                             </button>
                             <p className="mt-4 text-center text-sm text-gray-600">
-                                {registerStrings.footerText}
+                                {registerStrings.footerText}{' '}
                                 <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500 underline">
                                     {registerStrings.linkText}
                                 </Link>
@@ -172,6 +162,7 @@ export default function Register() {
                     </form>
                 </div>
             </div>
+            <Toaster position="top-right" richColors closeButton />
         </div>
     );
 }

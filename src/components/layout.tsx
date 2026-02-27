@@ -19,7 +19,6 @@ import {
     MenubarMenu, MenubarTrigger,
 } from '@/components/ui/menubar';
 import { Tag, Receipt, Wallet, Plus } from 'lucide-react';
-import { Toaster } from './ui/sonner';
 
 export default function Layout() {
     const location = useLocation();
@@ -190,7 +189,7 @@ export default function Layout() {
                             'menu'
                 }
             />
-            <Toaster position="top-right" richColors closeButton />
+
         </div>
     );
 }
