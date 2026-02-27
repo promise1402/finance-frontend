@@ -114,3 +114,43 @@ export const categoryStrings = {
     saveError: 'Failed to save category.',
     deleteError: 'Failed to delete category.',
 } as const;
+
+export const expenseStrings = {
+    // Modal
+    createTitle: 'New Expense',
+    editTitle: 'Edit Expense',
+    amountField: 'Amount',
+    amountRequired: 'Amount is required.',
+    amountInvalid: 'Enter a valid positive amount.',
+    categoryField: 'Category',
+    categoryPlaceholder: 'Select a category',
+    categoryRequired: 'Please select a category.',
+    dateField: 'Date',
+    dateRequired: 'Date is required.',
+    noteField: 'Note',
+    noteRequired: 'Note is required.',
+    notePlaceholder: 'What was this expense for?',
+    createBtn: 'Add Expense',
+    saveBtn: 'Save Changes',
+    savingBtn: 'Saving…',
+    cancelBtn: 'Cancel',
+    // Delete dialog
+    deleteTitle: 'Delete Expense',
+    deleteDesc: 'This will permanently delete this expense. This cannot be undone.',
+    deleteConfirm: 'Delete',
+    deleteCancel: 'Cancel',
+    // Page
+    pageDesc: 'Track and manage all your expenses.',
+    tableNoteCol: 'Note',
+    tableAmountCol: 'Amount',
+    tableCategoryCol: 'Category',
+    tableDateCol: 'Date',
+    tableActionsCol: 'Actions',
+    addBtn: '+ Add Expense',
+    emptyTitle: 'No expenses yet',
+    emptyDesc: 'Add your first expense to start tracking.',
+    // Errors
+    fetchError: 'Failed to load expenses.',
+    saveError: 'Failed to save expense.',
+    deleteError: 'Failed to delete expense.',
+} as const;

@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch } from '@/store';
 
 import { addCategory, selectCategories } from '@/store/slices/categorySlice';
-import { categoryStrings as CS } from '@/utils/appString';
+import { addExpense, fetchExpenses } from '@/store/slices/expenseSlice';
+import { categoryStrings as CS, expenseStrings as ES } from '@/utils/appString';
 import { AddExpenseModal, type ExpenseFormValues } from '@/modals/addExpense';
 import { AddCategoryModal, type CategoryFormValues } from '@/modals/addCategory';
 
@@ -41,10 +42,24 @@ export default function Layout() {
     // Expense
     const handleExpenseSubmit = async (data: ExpenseFormValues) => {
         setLoading(true);
+        const note = data.note.trim();
         try {
-            // TODO: await dispatch(addExpense({ ... })).unwrap();
-            console.log('Create expense:', data);
+            await dispatch(addExpense({
+                amount: Number(data.amount),
+                note,
+                date: data.date,
+                category: data.category,
+            })).unwrap();
+            dispatch(fetchExpenses()); // sync list in case ExpensesPage is mounted
+            toast.success(`"${note}" expense added.`, {
+                description: 'You can now view it in your expenses.',
+            });
             setExpenseOpen(false);
+        } catch (err: any) {
+            toast.error(ES.saveError, {
+                id: 'expense-save-error',
+                description: 'Please try again.',
+            });
         } finally {
             setLoading(false);
         }
@@ -114,7 +129,7 @@ export default function Layout() {
                         </p>
                     </div>
 
-                    {/* Quick Actions — always a dropdown on all pages */}
+                    {/* Quick Actions */}
                     <div className="flex items-center gap-2 ml-auto">
                         <Menubar className={`bg-transparent border ${t.menubarBorder} h-8`}>
                             <MenubarMenu>
