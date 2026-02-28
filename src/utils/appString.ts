@@ -5,9 +5,12 @@ export const loginStrings = {
     passwordLabel: "Password",
     passwordPlaceholder: "••••••••",
     buttonText: "Sign in",
+    loadingText: "Signing in…",
     footerText: "New to Finance Manager?",
     linkText: "Create an account",
     apiFallbackError: "Login failed. Please check your credentials.",
+    successTitle: "Welcome back!",
+    successDesc: "You have logged in successfully.",
 };
 
 export const registerStrings = {
@@ -17,9 +20,12 @@ export const registerStrings = {
     passwordLabel: "Password",
     confirmPasswordLabel: "Confirm Password",
     buttonText: "Register",
+    loadingText: "Creating account…",
     footerText: "Already have an account?",
     linkText: "Sign in",
     apiFallbackError: "Something went wrong. Please try again.",
+    successTitle: "Account created!",
+    successDesc: "You can now sign in.",
 };
 
 export const validationStrings = {

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from '@/components/ui/sonner';
 import { ProtectedRoute } from './routes/protectedRoute';
 import Layout from './components/layout';
 import './App.css';
@@ -30,6 +31,9 @@ function App() {
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+
+      {/* Toaster at root so toasts survive navigation */}
+      <Toaster position="top-right" richColors closeButton />
     </BrowserRouter>
   );
 }
