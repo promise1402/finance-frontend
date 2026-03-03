@@ -160,3 +160,19 @@ export const expenseStrings = {
     saveError: 'Failed to save expense.',
     deleteError: 'Failed to delete expense.',
 } as const;
+
+export const summaryStrings = {
+    pageDesc:     'Browse your expenses by day, week, month, or year.',
+    noExpenses:   'No expenses',
+    noExpensesDesc: 'Nothing recorded for',
+    fetchError:   'Failed to load summary.',
+    fetchErrorDesc: 'Please try again.',
+    // Table headers
+    tableNoteCol:     'Note',
+    tableCategoryCol: 'Category',
+    tableDateCol:     'Date',
+    tableAmountCol:   'Amount',
+    // Period bar
+    expense:  'expense',
+    expenses: 'expenses',
+} as const;
