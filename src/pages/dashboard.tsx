@@ -131,10 +131,14 @@ export default function DashboardPage() {
     useEffect(() => {
         dispatch(fetchCategories()).unwrap().catch(() => { });
         dispatch(fetchExpenses()).unwrap().catch(() => { });
+    }, [dispatch]);
+
+    // Re-fetch summary whenever expenses change
+    useEffect(() => {
         dispatch(fetchSummary({ range: 'monthly', anchor: new Date().toISOString() }))
             .unwrap()
             .catch(() => toast.error(S.fetchError, { description: S.fetchErrorDesc }));
-    }, [dispatch]);
+    }, [dispatch, expenses.length]);
 
     // Derived values
     const totalBudget = summary?.totalBudget ?? 0;
@@ -185,7 +189,7 @@ export default function DashboardPage() {
     // Recent
     const recent = useMemo(
         () => [...expenses]
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
             .slice(0, 5),
         [expenses]
     );
@@ -207,7 +211,7 @@ export default function DashboardPage() {
             ) : (
                 <>
                     {/* Stat cards — each with its own accent */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
 
                         {/* Total Budget — blue */}
                         <StatCard
