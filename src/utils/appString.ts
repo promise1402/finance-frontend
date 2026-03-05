@@ -162,17 +162,43 @@ export const expenseStrings = {
 } as const;
 
 export const summaryStrings = {
-    pageDesc:     'Browse your expenses by day, week, month, or year.',
-    noExpenses:   'No expenses',
+    pageDesc: 'Browse your expenses by day, week, month, or year.',
+    noExpenses: 'No expenses',
     noExpensesDesc: 'Nothing recorded for',
-    fetchError:   'Failed to load summary.',
+    fetchError: 'Failed to load summary.',
     fetchErrorDesc: 'Please try again.',
     // Table headers
-    tableNoteCol:     'Note',
+    tableNoteCol: 'Note',
     tableCategoryCol: 'Category',
-    tableDateCol:     'Date',
-    tableAmountCol:   'Amount',
+    tableDateCol: 'Date',
+    tableAmountCol: 'Amount',
     // Period bar
-    expense:  'expense',
+    expense: 'expense',
     expenses: 'expenses',
+} as const;
+
+export const dashboardStrings = {
+    welcome: 'Welcome back,',
+    fetchError: 'Failed to load dashboard.',
+    fetchErrorDesc: 'Please try again.',
+    // Stat cards
+    statBudget: 'Total Budget',
+    statThisMonth: 'This Month',
+    statAllTime: 'All-time Spent',
+    statRemaining: 'Remaining',
+    statOverBudget: 'Over budget',
+    statUsed: '% used',
+    // Charts
+    spendingOverview: 'Spending Overview',
+    byCategory: 'By Category',
+    noCategoryData: 'No data for this period.',
+    noBarData: 'No expense data yet.',
+    // Recent
+    recentTransactions: 'Recent Transactions',
+    viewAll: 'View all',
+    noTransactions: 'No transactions yet.',
+    // Range labels
+    range1M: '1M',
+    range3M: '3M',
+    range6M: '6M',
 } as const;
