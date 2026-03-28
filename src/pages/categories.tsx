@@ -31,7 +31,7 @@ import {
 import { Pencil, Trash2, Tag, Loader2 } from 'lucide-react';
 
 // Empty state
-function EmptyState({ onAdd }: { onAdd: () => void }) {
+function EmptyState() {
     return (
         <div className="flex flex-col items-center justify-center py-16 gap-4">
             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${t.logoIconBg}`}>
@@ -41,9 +41,6 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
                 <p className={`text-sm font-medium ${t.textPrimary}`}>{S.emptyTitle}</p>
                 <p className={`text-xs mt-1 ${t.textMuted}`}>{S.emptyDesc}</p>
             </div>
-            <Button size="sm" onClick={onAdd} className={`text-xs ${t.btnPrimary}`}>
-                {S.addBtn}
-            </Button>
         </div>
     );
 }
@@ -171,7 +168,7 @@ export default function CategoriesPage() {
                     color: data.color,
                     ...(data.budget ? { budget: Number(data.budget) } : {}),
                 })).unwrap();
-                // ✅ Update — blue info tone
+                // Update — blue info tone
                 toast.success(`"${name}" updated successfully.`, {
                     description: 'Your changes have been saved.',
                 });
@@ -249,7 +246,7 @@ export default function CategoriesPage() {
                             <Loader2 className={`w-6 h-6 animate-spin ${t.textMuted}`} />
                         </div>
                     ) : categories.length === 0 ? (
-                        <EmptyState onAdd={openCreate} />
+                        <EmptyState />
                     ) : (
                         <>
                             {/* Mobile — card list */}

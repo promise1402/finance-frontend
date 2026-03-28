@@ -8,7 +8,7 @@ export interface AuthState {
     error: string | null;
 }
 
-// Cookie is handled by browser automatically — only persist the user object
+// Cookie is handled by browser automatically - only persist the user object
 const persistedUser = localStorage.getItem('user');
 
 const initialState: AuthState = {
@@ -82,7 +82,7 @@ const authSlice = createSlice({
                 state.error = action.payload as string;
             });
 
-        // Register — no auth state change, user must log in after registering
+        // Register - no auth state change, user must log in after registering
         builder
             .addCase(registerUser.pending, (state) => { state.loading = true; state.error = null; })
             .addCase(registerUser.fulfilled, (state) => { state.loading = false; })

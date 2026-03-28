@@ -30,7 +30,6 @@ interface SidebarProps {
     onClose: () => void;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 export default function Sidebar({ isOpen, onOpen, onClose }: SidebarProps) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -53,7 +52,7 @@ export default function Sidebar({ isOpen, onOpen, onClose }: SidebarProps) {
 
     return (
         <>
-            {/* ── MOBILE TOPBAR ─────────────────────────────────────────────────── */}
+            {/* MOBILE TOPBAR */}
             <div className={`
         flex md:hidden items-center justify-between
         px-4 h-15.25 shrink-0
@@ -67,7 +66,7 @@ export default function Sidebar({ isOpen, onOpen, onClose }: SidebarProps) {
                 <div className="w-8" />
             </div>
 
-            {/* ── MOBILE OVERLAY ────────────────────────────────────────────────── */}
+            {/* MOBILE OVERLAY */}
             {isOpen && (
                 <div
                     className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-sm"
