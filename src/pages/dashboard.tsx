@@ -210,10 +210,10 @@ export default function DashboardPage() {
                 </div>
             ) : (
                 <>
-                    {/* Stat cards — each with its own accent */}
+                    {/* Stat cards - each with its own accent */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
 
-                        {/* Total Budget — blue */}
+                        {/* Total Budget - blue */}
                         <StatCard
                             label={S.statBudget}
                             value={fmt(totalBudget)}
@@ -223,7 +223,7 @@ export default function DashboardPage() {
                             valueColor="text-blue-700"
                         />
 
-                        {/* This Month — violet */}
+                        {/* This Month - violet */}
                         <StatCard
                             label={S.statThisMonth}
                             value={fmt(periodTotal)}
@@ -233,7 +233,7 @@ export default function DashboardPage() {
                             valueColor="text-violet-700"
                         />
 
-                        {/* All-time Spent — amber */}
+                        {/* All-time Spent - amber */}
                         <StatCard
                             label={S.statAllTime}
                             value={fmt(totalExpenses)}
@@ -243,7 +243,7 @@ export default function DashboardPage() {
                             valueColor="text-amber-700"
                         />
 
-                        {/* Remaining — emerald or red */}
+                        {/* Remaining - emerald or red */}
                         <StatCard
                             label={S.statRemaining}
                             value={fmt(remainingBudget)}

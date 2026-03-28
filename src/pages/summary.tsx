@@ -224,7 +224,7 @@ export default function SummaryPage() {
                                                 <span className="w-3 h-3 rounded-full shrink-0 ring-1 ring-black/10"
                                                     style={{ backgroundColor: color }} />
                                                 <div className="min-w-0">
-                                                    <p className={`text-sm font-medium truncate ${t.textPrimary}`}>{exp.note ?? '—'}</p>
+                                                    <p className={`text-sm font-medium truncate ${t.textPrimary}`}>{exp.note ?? '-'}</p>
                                                     <p className={`text-xs mt-0.5 ${t.textMuted}`}>
                                                         {name} · {new Date(exp.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                                     </p>
@@ -255,7 +255,7 @@ export default function SummaryPage() {
                                             return (
                                                 <tr key={exp.id} className={`border-t ${t.tableRow} ${t.tableRowHover} transition-colors`}>
                                                     <td className="px-4 py-3">
-                                                        <span className={`text-sm font-medium ${t.textPrimary}`}>{exp.note ?? '—'}</span>
+                                                        <span className={`text-sm font-medium ${t.textPrimary}`}>{exp.note ?? '-'}</span>
                                                     </td>
                                                     <td className="px-4 py-3">
                                                         <div className="flex items-center gap-2">
