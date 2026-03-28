@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import type { AppDispatch } from '@/store';
@@ -33,6 +33,16 @@ export function QuickActionFAB({ mode }: QuickActionFABProps) {
     const [expenseOpen, setExpenseOpen] = useState(false);
     const [categoryOpen, setCategoryOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!menuOpen) return;
+        const handler = () => setMenuOpen(false);
+        const id = setTimeout(() => document.addEventListener('click', handler), 0);
+        return () => {
+            clearTimeout(id);
+            document.removeEventListener('click', handler);
+        };
+    }, [menuOpen]);
 
     const handleFabClick = () => {
         if (mode === 'menu') setMenuOpen(o => !o);
@@ -112,7 +122,7 @@ export function QuickActionFAB({ mode }: QuickActionFABProps) {
                         {/* Category first */}
                         <button
                             className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${t.fabMenuItem}`}
-                            onClick={() => { setMenuOpen(false); setCategoryOpen(true); }}
+                            onClick={() => setCategoryOpen(true)}
                         >
                             <Tag className="w-3.5 h-3.5" />
                             {S.addCategory}
@@ -121,7 +131,7 @@ export function QuickActionFAB({ mode }: QuickActionFABProps) {
                         {/* Expense second */}
                         <button
                             className={`flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium transition-colors ${t.fabMenuItem}`}
-                            onClick={() => { setMenuOpen(false); setExpenseOpen(true); }}
+                            onClick={() => setExpenseOpen(true)}
                         >
                             <Receipt className="w-3.5 h-3.5" />
                             {S.addExpense}
@@ -149,13 +159,13 @@ export function QuickActionFAB({ mode }: QuickActionFABProps) {
             <AddExpenseModal
                 open={expenseOpen}
                 categories={categoriesForExpense}
-                onClose={() => setExpenseOpen(false)}
+                onClose={() => { setExpenseOpen(false); setMenuOpen(false); }}
                 onSubmit={handleExpenseSubmit}
                 loading={loading}
             />
             <AddCategoryModal
                 open={categoryOpen}
-                onClose={() => setCategoryOpen(false)}
+                onClose={() => { setCategoryOpen(false); setMenuOpen(false); }}
                 onSubmit={handleCategorySubmit}
                 loading={loading}
             />

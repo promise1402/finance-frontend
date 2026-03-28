@@ -97,7 +97,7 @@ export default function Layout() {
     return (
         <div className={`flex flex-col h-screen ${t.pageBg} overflow-hidden`}>
 
-            {/* ══ ROW 1 — TOPBAR */}
+            {/* ROW 1 - TOPBAR */}
             <div className="hidden md:flex w-full h-15.25 shrink-0">
 
                 {/* Desktop logo strip */}

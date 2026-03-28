@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Tag } from 'lucide-react';
 
-// ─── Preset swatches ──────────────────────────────────────────────────────────
+// Preset swatches
 export const CATEGORY_COLORS = [
     '#6366f1', // indigo
     '#8b5cf6', // violet
@@ -26,7 +26,7 @@ export const CATEGORY_COLORS = [
     '#64748b', // slate
 ] as const;
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// Types
 export interface CategoryFormValues {
     name: string;
     color: string;
@@ -153,7 +153,7 @@ export function AddCategoryModal({
                         <input type="hidden" {...register('color', { required: true })} />
                     </div>
 
-                    {/* Budget — optional */}
+                    {/* Budget - optional */}
                     <div className="space-y-1.5">
                         <Label htmlFor="cat-budget" className={`text-xs font-medium ${t.textPrimary}`}>
                             {S.budgetField}{' :'}
