@@ -87,7 +87,7 @@ export function AddCategoryModal({
     return (
         <Dialog open={open} onOpenChange={handleClose}>
             <DialogContent className={`
-                w-[calc(100vw-2rem)] max-w-sm max-h-[85vh] overflow-y-auto
+                w-[calc(100vw-2rem)] max-w-sm max-h-[85vh] overflow-y-auto rounded-lg
                 ${t.popoverBg}
             `}>
                 <DialogHeader>

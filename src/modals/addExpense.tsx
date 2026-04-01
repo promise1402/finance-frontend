@@ -74,7 +74,7 @@ export function AddExpenseModal({
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className={`w-[calc(100vw-2rem)] max-w-sm max-h-[85vh] overflow-y-auto ${t.popoverBg}`}>
+            <DialogContent className={`w-[calc(100vw-2rem)] max-w-sm max-h-[85vh] overflow-y-auto rounded-lg ${t.popoverBg}`}>
                 <DialogHeader>
                     <DialogTitle className={`flex items-center gap-2 text-sm font-semibold ${t.textPrimary}`}>
                         <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${t.logoIconBg}`}>
@@ -163,7 +163,6 @@ export function AddExpenseModal({
                         </Label>
                         <Textarea
                             id="exp-note"
-                            placeholder={S.notePlaceholder}
                             rows={2}
                             className={`text-sm resize-none ${t.inputBg} ${t.inputBorder} ${t.inputText} ${t.inputPlaceholder} ${t.inputFocus} ${errCls(!!errors.note)}`}
                             {...register('note', { required: S.noteRequired })}
