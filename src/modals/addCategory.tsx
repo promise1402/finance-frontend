@@ -112,7 +112,6 @@ export function AddCategoryModal({
                         </Label>
                         <Input
                             id="cat-name"
-                            placeholder={S.namePlaceholder}
                             autoComplete="off"
                             className={`h-9 text-sm
                                 ${t.inputBg} ${t.inputBorder} ${t.inputText}

@@ -58,7 +58,6 @@ export const categoryStrings = {
     createTitle: 'New Category',
     editTitle: 'Edit Category',
     nameField: 'Category Name',
-    namePlaceholder: 'e.g. Groceries, Rent, Transport',
     nameRequired: 'Category name is required.',
     nameMinLength: 'At least 2 characters.',
     colorField: 'Color',
