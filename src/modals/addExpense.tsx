@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { format, parseISO } from 'date-fns';
 
 import { t } from '@/theme/theme';
 import { expenseStrings as S } from '@/utils/appString';
@@ -7,15 +8,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Calendar } from '@/components/ui/calendar';
 import {
     Dialog, DialogContent, DialogHeader,
     DialogTitle, DialogFooter,
 } from '@/components/ui/dialog';
 import {
+    Popover, PopoverContent, PopoverTrigger,
+} from '@/components/ui/popover';
+import {
     Select, SelectContent, SelectItem,
     SelectTrigger, SelectValue,
 } from '@/components/ui/select';
-import { Receipt } from 'lucide-react';
+import { Receipt, CalendarIcon } from 'lucide-react';
 
 export interface Category {
     _id: string;
@@ -51,6 +56,7 @@ export function AddExpenseModal({
     defaultValues,
 }: AddExpenseModalProps) {
     const isEdit = !!defaultValues;
+    const [calOpen, setCalOpen] = useState(false);
 
     const { register, handleSubmit, control, reset, formState: { errors } } =
         useForm<ExpenseFormValues>({ mode: 'onChange', defaultValues: EMPTY });
@@ -74,7 +80,7 @@ export function AddExpenseModal({
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className={`w-[calc(100vw-2rem)] max-w-sm max-h-[85vh] overflow-y-auto ${t.popoverBg}`}>
+            <DialogContent className={`w-[calc(100vw-2rem)] max-w-sm max-h-[85vh] overflow-y-auto rounded-lg ${t.popoverBg}`}>
                 <DialogHeader>
                     <DialogTitle className={`flex items-center gap-2 text-sm font-semibold ${t.textPrimary}`}>
                         <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${t.logoIconBg}`}>
@@ -144,14 +150,48 @@ export function AddExpenseModal({
 
                     {/* Date */}
                     <div className="space-y-1.5">
-                        <Label htmlFor="exp-date" className={`text-xs font-medium ${t.textPrimary}`}>
+                        <Label className={`text-xs font-medium ${t.textPrimary}`}>
                             {S.dateField} <span className="text-red-500">*</span>
                         </Label>
-                        <Input
-                            id="exp-date"
-                            type="date"
-                            className={`h-9 text-sm ${t.inputBg} ${t.inputBorder} ${t.inputText} ${t.inputFocus} ${errCls(!!errors.date)}`}
-                            {...register('date', { required: S.dateRequired })}
+                        <Controller
+                            name="date"
+                            control={control}
+                            rules={{ required: S.dateRequired }}
+                            render={({ field }) => (
+                                <Popover open={calOpen} onOpenChange={setCalOpen}>
+                                    <PopoverTrigger asChild>
+                                        <button
+                                            type="button"
+                                            className={`w-full h-9 px-3 flex items-center justify-between rounded-md border text-sm ${t.inputBg} ${t.inputBorder} ${t.inputText} ${errCls(!!errors.date)}`}
+                                        >
+                                            <span className={field.value ? t.inputText : t.textMuted}>
+                                                {field.value
+                                                    ? format(parseISO(field.value), 'dd/MM/yyyy')
+                                                    : 'Pick a date'}
+                                            </span>
+                                            <CalendarIcon className={`w-3.5 h-3.5 ${t.textMuted}`} />
+                                        </button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className={`w-(--radix-popover-trigger-width) p-0 ${t.popoverBg}`}
+                                        align="start"
+                                        side="bottom"
+                                        avoidCollisions
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value ? parseISO(field.value) : undefined}
+                                            onSelect={d => {
+                                                field.onChange(d ? format(d, 'yyyy-MM-dd') : '');
+                                                setCalOpen(false);
+                                            }}
+                                            disabled={{ after: new Date() }}
+                                            initialFocus
+                                            className="w-full rounded-lg overflow-hidden"
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                            )}
                         />
                         {errors.date && <p className="text-xs text-red-500 leading-tight">{errors.date.message}</p>}
                     </div>
@@ -163,7 +203,6 @@ export function AddExpenseModal({
                         </Label>
                         <Textarea
                             id="exp-note"
-                            placeholder={S.notePlaceholder}
                             rows={2}
                             className={`text-sm resize-none ${t.inputBg} ${t.inputBorder} ${t.inputText} ${t.inputPlaceholder} ${t.inputFocus} ${errCls(!!errors.note)}`}
                             {...register('note', { required: S.noteRequired })}

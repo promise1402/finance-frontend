@@ -39,37 +39,6 @@ export const validationStrings = {
 };
 
 export const AppStrings = {
-    category: {
-        modalTitle: 'New Category',
-        labelField: 'Category Name',
-        labelPlaceholder: 'e.g. Groceries, Rent, Transport',
-        labelRequired: 'Category name is required.',
-        labelMinLength: 'At least 2 characters.',
-        budgetField: 'Budget',
-        budgetHint: 'optional · can be set later',
-        budgetInvalid: 'Must be a valid positive number.',
-        submitBtn: 'Create Category',
-        submittingBtn: 'Creating…',
-        cancelBtn: 'Cancel',
-    },
-
-    expense: {
-        modalTitle: 'New Expense',
-        amountField: 'Amount',
-        amountRequired: 'Amount is required.',
-        amountInvalid: 'Enter a valid positive amount.',
-        categoryField: 'Category',
-        categoryPlaceholder: 'Select a category',
-        categoryRequired: 'Please select a category.',
-        dateField: 'Date',
-        dateRequired: 'Date is required.',
-        noteField: 'Note',
-        noteRequired: 'Note is required.',
-        notePlaceholder: 'What was this expense for?',
-        submitBtn: 'Add Expense',
-        submittingBtn: 'Saving…',
-        cancelBtn: 'Cancel',
-    },
 
     fab: {
         addExpense: 'Add Expense',
@@ -89,7 +58,6 @@ export const categoryStrings = {
     createTitle: 'New Category',
     editTitle: 'Edit Category',
     nameField: 'Category Name',
-    namePlaceholder: 'e.g. Groceries, Rent, Transport',
     nameRequired: 'Category name is required.',
     nameMinLength: 'At least 2 characters.',
     colorField: 'Color',
@@ -135,7 +103,6 @@ export const expenseStrings = {
     dateRequired: 'Date is required.',
     noteField: 'Note',
     noteRequired: 'Note is required.',
-    notePlaceholder: 'What was this expense for?',
     createBtn: 'Add Expense',
     saveBtn: 'Save Changes',
     savingBtn: 'Saving…',
