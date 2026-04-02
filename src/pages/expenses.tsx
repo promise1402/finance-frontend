@@ -315,7 +315,7 @@ export default function ExpensesPage() {
             />
 
             <AlertDialog open={!!deleteTarget} onOpenChange={open => !open && setDeleteTarget(null)}>
-                <AlertDialogContent className={`w-[calc(100vw-2rem)] max-w-sm ${t.popoverBg}`}>
+                <AlertDialogContent className={`w-[calc(100vw-2rem)] max-w-sm rounded-lg ${t.popoverBg}`}>
                     <AlertDialogHeader>
                         <AlertDialogTitle className={`flex items-center gap-2 text-sm font-semibold ${t.textPrimary}`}>
                             <div className="w-7 h-7 rounded-lg bg-red-100 flex items-center justify-center shrink-0">

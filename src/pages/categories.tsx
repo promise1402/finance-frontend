@@ -108,7 +108,7 @@ function CategoryRow({
                         ₹{category.budget.toLocaleString()}
                     </span>
                 ) : (
-                    <span className={`text-xs ${t.textMuted}`}>-</span>
+                    <span className={`text-xs ${t.textMuted}`}>—</span>
                 )}
             </td>
             <td className={`px-4 py-3 text-xs ${t.textMuted}`}>
@@ -168,7 +168,7 @@ export default function CategoriesPage() {
                     color: data.color,
                     ...(data.budget ? { budget: Number(data.budget) } : {}),
                 })).unwrap();
-                // Update - blue info tone
+                // Update — blue info tone
                 toast.success(`"${name}" updated successfully.`, {
                     description: 'Your changes have been saved.',
                 });
@@ -188,7 +188,7 @@ export default function CategoriesPage() {
             // err.message comes from rejectWithValue in the slice
             const errStr = (err?.payload ?? err?.message ?? String(err ?? '')).toLowerCase();
             const isDuplicate = errStr.includes('exists') || errStr.includes('duplicate');
-            //  Error - red, never show raw API text
+            //  Error — red, never show raw API text
             toast.error(isDuplicate
                 ? `"${name}" already exists.`
                 : S.saveError,
@@ -249,7 +249,7 @@ export default function CategoriesPage() {
                         <EmptyState />
                     ) : (
                         <>
-                            {/* Mobile - card list */}
+                            {/* Mobile — card list */}
                             <div className="md:hidden">
                                 {categories.map(cat => (
                                     <CategoryCard key={cat._id} category={cat}
@@ -257,7 +257,7 @@ export default function CategoriesPage() {
                                 ))}
                             </div>
 
-                            {/* Desktop - table */}
+                            {/* Desktop — table */}
                             <div className="hidden md:block overflow-x-auto">
                                 <table className="w-full">
                                     <thead>
@@ -298,7 +298,7 @@ export default function CategoriesPage() {
 
             {/* Delete confirmation */}
             <AlertDialog open={!!deleteTarget} onOpenChange={open => !open && setDeleteTarget(null)}>
-                <AlertDialogContent className={`w-[calc(100vw-2rem)] max-w-sm ${t.popoverBg}`}>
+                <AlertDialogContent className={`w-[calc(100vw-2rem)] max-w-sm rounded-lg ${t.popoverBg}`}>
                     <AlertDialogHeader>
                         <AlertDialogTitle className={`flex items-center gap-2 text-sm font-semibold ${t.textPrimary}`}>
                             <div className="w-7 h-7 rounded-lg bg-red-100 flex items-center justify-center shrink-0">
